@@ -13,3 +13,83 @@
 // Step 4: Reusable Utilities
 // - Create modular utility functions, such as createElement(tag, attributes).
 // - Ensure all functions follow DRY principles for maintainability.
+
+
+// ===============================
+// index.js
+// DOM Testing & User Behavior Simulation
+// ===============================
+
+// ---------- Add an element to the DOM ----------
+function addElementToDOM(id, textContent) {
+  let element = document.getElementById(id);
+
+  if (!element) {
+    // If it doesn't exist, create it
+    element = document.createElement('p');
+    element.id = id;
+
+    const container = document.getElementById('container') || document.body;
+    container.appendChild(element);
+  }
+
+  // Set the text content
+  element.textContent = textContent;
+}
+
+// ---------- Remove an element from the DOM ----------
+function removeElementFromDOM(id) {
+  const element = document.getElementById(id);
+  if (element) element.remove();
+}
+
+// ---------- Simulate button click ----------
+function simulateClick(id, textContent) {
+  const button = document.getElementById(id);
+  if (!button) return;
+
+  button.addEventListener('click', () => {
+    button.textContent = textContent;
+  });
+
+  // Simulate click for testing
+  button.click();
+}
+
+// ---------- Handle form submission ----------
+function handleFormSubmit(formId, targetId) {
+  const form = document.getElementById(formId);
+  const target = document.getElementById(targetId);
+  if (!form || !target) return;
+
+  const input = form.querySelector('input');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    if (input.value.trim() === '') {
+      let error = document.getElementById('error-message');
+      if (!error) {
+        error = document.createElement('p');
+        error.id = 'error-message';
+        form.appendChild(error);
+      }
+      error.textContent = 'Input cannot be empty';
+      error.classList.remove('hidden');
+    } else {
+      target.textContent = input.value;
+      input.value = '';
+    }
+  });
+
+  // Simulate submission for testing
+  form.dispatchEvent(new Event('submit'));
+}
+
+// ---------- Export functions for Jest ----------
+module.exports = {
+  addElementToDOM,
+  removeElementFromDOM,
+  simulateClick,
+  handleFormSubmit
+};
